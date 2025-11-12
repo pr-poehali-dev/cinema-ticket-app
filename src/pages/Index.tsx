@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import Profile from '@/components/Profile';
 
 interface Movie {
   id: number;
@@ -92,6 +93,7 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('Все');
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [currentPage, setCurrentPage] = useState<'movies' | 'profile'>('movies');
 
   const filteredMovies = movies.filter(movie => {
     const matchesSearch = 
@@ -104,14 +106,58 @@ export default function Index() {
     return matchesSearch && matchesGenre;
   });
 
+  if (currentPage === 'profile') {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <button 
+                onClick={() => setCurrentPage('movies')}
+                className="text-3xl font-display font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+              >
+                CinemaHub
+              </button>
+              <nav className="flex items-center gap-6">
+                <button onClick={() => setCurrentPage('movies')} className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2">
+                  <Icon name="Film" size={20} />
+                  <span className="hidden sm:inline">Фильмы</span>
+                </button>
+                <a href="#" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2">
+                  <Icon name="Calendar" size={20} />
+                  <span className="hidden sm:inline">Сеансы</span>
+                </a>
+                <a href="#" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2">
+                  <Icon name="Ticket" size={20} />
+                  <span className="hidden sm:inline">Мои билеты</span>
+                </a>
+                <button 
+                  onClick={() => setCurrentPage('profile')} 
+                  className="text-primary transition-colors flex items-center gap-2"
+                >
+                  <Icon name="User" size={20} />
+                  <span className="hidden sm:inline">Профиль</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+        </header>
+        <Profile />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <button 
+              onClick={() => setCurrentPage('movies')}
+              className="text-3xl font-display font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+            >
               CinemaHub
-            </h1>
+            </button>
             <nav className="flex items-center gap-6">
               <a href="#" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2">
                 <Icon name="Film" size={20} />
@@ -125,10 +171,13 @@ export default function Index() {
                 <Icon name="Ticket" size={20} />
                 <span className="hidden sm:inline">Мои билеты</span>
               </a>
-              <a href="#" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2">
+              <button 
+                onClick={() => setCurrentPage('profile')} 
+                className={`transition-colors flex items-center gap-2 ${currentPage === 'profile' ? 'text-primary' : 'text-foreground/80 hover:text-foreground'}`}
+              >
                 <Icon name="User" size={20} />
                 <span className="hidden sm:inline">Профиль</span>
-              </a>
+              </button>
             </nav>
           </div>
         </div>
